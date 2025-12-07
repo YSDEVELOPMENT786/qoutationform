@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Quotation Generator — Web Development</title>
+  <style>
+    :root{
+      --bg:#0f1724;
+      --card:#0b1220;
+      --muted:#9aa4b2;
+      --accent:#1e90ff;
+      --glass: rgba(255,255,255,0.03);
+      --radius:12px;
+      font-family: Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
+    }
+    *{box-sizing:border-box}
+    body{margin:0;background:linear-gradient(180deg,#071028 0%, #071020 60%);color:#e6eef8;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:32px}
+    .container{width:100%;max-width:900px}
+    header{display:flex;gap:16px;align-items:center;margin-bottom:18px}
+    .brand{background:var(--glass);padding:10px 14px;border-radius:10px;display:flex;gap:12px;align-items:center}
+    .logo{width:46px;height:46px;border-radius:8px;background:linear-gradient(135deg,var(--accent),#7c3aed);display:flex;align-items:center;justify-content:center;font-weight:700}
+    h1{font-size:18px;margin:0}
+    p.lead{margin:0;color:var(--muted);font-size:13px}
+
+    .card{background:var(--card);padding:18px;border-radius:var(--radius);box-shadow:0 6px 18px rgba(2,6,23,0.6)}
+    form .row{display:flex;gap:10px;margin-bottom:12px}
+    label{font-size:13px;color:var(--muted);display:block;margin-bottom:6px}
+    input[type=text], input[type=number], select, textarea{width:100%;padding:10px;border-radius:8px;border:1px solid rgba(255,255,255,0.04);background:transparent;color:inherit}
+    textarea{min-height:80px}
+
+    .packages{display:flex;gap:10px;margin-top:8px}
+    .pkg{flex:1;padding:12px;border-radius:10px;background:linear-gradient(180deg, red, transparent);border:1px solid rgba(128, 192, 10, 0.03)}
+    .pkg h3{margin:0 0 6px 0}
+    .pkg .price{font-weight:700;font-size:18px}
+
+    .result{margin-top:12px;background:linear-gradient(180deg, rgba(255,255,255,0.01), transparent);padding:12px;border-radius:10px;border:1px solid rgba(255,255,255,0.03)}
+    .quote-preview{white-space:pre-wrap;font-family:monospace;background:#071427;padding:12px;border-radius:8px;border:1px solid rgba(255,255,255,0.03);color:#dff0ff}
+
+    .actions{display:flex;gap:10px;align-items:center;margin-top:12px}
+    button{background:var(--accent);border:0;padding:10px 14px;border-radius:10px;color:#051226;font-weight:700;cursor:pointer}
+    button.ghost{background:transparent;border:1px solid rgba(255,255,255,0.06);color:var(--muted);font-weight:600}
+
+    @media (max-width:780px){
+      .packages{flex-direction:column}
+    }
+    #goButton {
+    padding: 12px 25px;
+    background-color: red;
+    color: black;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 18px;
+    transition: 0.3s;
+}
+
+#goButton:hover {
+    background-color: #005fcc;
+}
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="brand card">
+        <div class="logo">YS</div>
+        <div>
+          <h1>YS DEVELOPMENT— Quotation Form</h1>
+          <p class="lead">Enter customer budget and see recommended package with cost breakdown.</p>
+        </div>
+      </div>
+    </header>
+
+    <div class="card">
+      <form id="quoteForm">
+        <div class="row">
+          <div style="flex:1">
+            <label>Customer name</label>
+            <input type="text" id="customerName" placeholder="e.g. John Doe / Acme Ltd" required />
+          </div>
+          <div style="width:160px">
+            <label>Currency</label>
+            <select id="currency">
+              <option value="ZAR">ZAR</option>
+              <option value="USD">USD</option>
+              <option value="EUR">EUR</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="row">
+          <div style="flex:1">
+            <label>Customer budget</label>
+            <input type="number" id="budget" min="0" value="30000" />
+          </div>
+          <div style="width:160px">
+            <label>Project length (weeks)</label>
+            <input type="number" id="duration" min="1" value="6" />
+          </div>
+        </div>
+
+        <div class="packages">
+          <div class="pkg">
+            <h3>Platinum</h3>
+            <div class="price" id="basicPrice">R 3000</div>
+            <div class="desc">Small brochure site — 1-2 pages, responsive,1 Logo,1 Revesion,1 Month Free Maintenance, Monthly Fee=R300</div>
+          </div>
+          <div class="pkg">
+            <h3>Sliver</h3>
+            <div class="price" id="standardPrice">R 8000</div>
+            <div class="desc">E-commerce / booking site — 3-5 Webpages, payments,3 Revesions, SEO basics, 2 Month Free Maintenance, Monthly Fee=R700</div>
+          </div>
+          <div class="pkg">
+            <h3>Gold</h3>
+            <div class="price" id="premiumPrice">R 10000</div>
+            <div class="desc">5-10 Webpages, SEO, Unlimited Revesions, Free Adverts, Free Maintenance, Monthly Fee=R900</div>
+          </div>
+        </div>
+
+        <div class="result" id="resultBox">
+          <div style="display:flex;gap:10px;align-items:center;justify-content:space-between">
+            <div>
+              <div style="font-size:13px;color:var(--muted)">Recommended package</div>
+              <div id="recommended" style="font-weight:800;font-size:16px">Standard</div>
+            </div>
+            <div style="text-align:right">
+              <div style="font-size:13px;color:var(--muted)">Estimated cost</div>
+              <div id="allocSummary" style="font-weight:700">R 3,0000</div>
+            </div>
+          </div>
+
+          <div style="margin-top:10px">
+            <label>Notes for quote</label>
+            <textarea id="notes" placeholder="We YS DEVELOPMENT is not Liable for third party entry, and clients/ customers"></textarea>
+          </div>
+
+          <div class="actions">
+            <button type="button" id="generateBtn">Generate Quote</button>
+            <button type="button" class="ghost" id="resetBtn">Reset</button>
+            <button type="button" class="ghost" id="downloadBtn">Download TXT</button>
+          </div>
+        </div>
+      </form>
+    </div>
+
+    <div style="height:12px"></div>
+    <div class="card">
+      <h3 style="margin-top:0">Quote Preview</h3>
+      <div class="quote-preview" id="quotePreview">Fill the form and click "Generate Quote" — the preview will appear here.</div>
+      <div style="margin-top:12px">
+        <button id="printBtn">Print</button>
+        <button id="copyBtn" class="ghost">Copy</button>
+      </div>
+    </div>
+     <br/>
+  <br/>
+   <div align="center">
+   <button id="goButton">Back to Home</button>
+  </div>
+  </div>
+  
+
+  <script>
+    const prices = { Basic:3000, Standard:8000, Premium:10000 };
+    const budgetEl = document.getElementById('budget');
+    const currencyEl = document.getElementById('currency');
+    const allocSummary = document.getElementById('allocSummary');
+    const recommendedEl = document.getElementById('recommended');
+    const generateBtn = document.getElementById('generateBtn');
+    const resetBtn = document.getElementById('resetBtn');
+    const quotePreview = document.getElementById('quotePreview');
+    const notesEl = document.getElementById('notes');
+    const downloadBtn = document.getElementById('downloadBtn');
+    const copyBtn = document.getElementById('copyBtn');
+    const printBtn = document.getElementById('printBtn');
+
+    function formatMoney(n){
+      const cur = currencyEl.value || 'ZAR';
+      const locales = { ZAR:'en-ZA', USD:'en-US', EUR:'de-DE' };
+      const symbol = { ZAR:'R', USD:'$', EUR:'€' };
+      return symbol[cur] + ' ' + Number(n).toLocaleString(locales[cur]);
+    }
+
+    document.getElementById('basicPrice').textContent = formatMoney(prices.Basic);
+    document.getElementById('standardPrice').textContent = formatMoney(prices.Standard);
+    document.getElementById('premiumPrice').textContent = formatMoney(prices.Premium);
+
+    function recommendPackage(){
+      const b = Number(budgetEl.value) || 0;
+      let rec = 'Standard';
+      let cost = prices.Standard;
+      if(b < prices.Basic * 1.2){ rec = 'Basic'; cost = prices.Basic; }
+      else if(b >= prices.Premium * 0.9){ rec = 'Premium'; cost = prices.Premium; }
+      recommendedEl.textContent = rec;
+      allocSummary.textContent = formatMoney(cost);
+      return {rec, cost};
+    }
+
+    function generateQuote(){
+      const name = document.getElementById('customerName').value || 'Unnamed Customer';
+      const currency = currencyEl.value;
+      const budget = Number(budgetEl.value) || 0;
+      const notes = notesEl.value || '';
+      const {rec, cost} = recommendPackage();
+
+      const today = new Date();
+      const dateStr = today.toLocaleDateString();
+
+      const lines = [];
+      lines.push(`YS Development — Quotation`);
+      lines.push(`Date: ${dateStr}`);
+      lines.push(`Customer: ${name}`);
+      lines.push(`Currency: ${currency}`);
+      lines.push(`Budget: ${formatMoney(budget)}`);
+      lines.push('');
+      lines.push(`Recommended Package: ${rec}`);
+      lines.push(`Estimated Cost: ${formatMoney(cost)}`);
+      lines.push('');
+      if(notes) { lines.push('Notes:'); lines.push(`  ${notes}`); lines.push(''); }
+      lines.push('Terms: 30% deposit required to start project, balance upon completion.We YS DEVELOPMENT is not Liable for third party entry, and clients/ customers');
+      lines.push('');
+      lines.push('Prepared by: YS DEVELOPMENT');
+
+      const txt = lines.join('\n');
+      quotePreview.textContent = txt;
+      return txt;
+    }
+
+    generateBtn.addEventListener('click', generateQuote);
+    resetBtn.addEventListener('click', ()=> document.getElementById('quoteForm').reset());
+    downloadBtn.addEventListener('click', ()=>{
+      const txt = generateQuote();
+      const blob = new Blob([txt],{type:'text/plain'});
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url; a.download = 'quotation.txt'; a.click();
+      URL.revokeObjectURL(url);
+    });
+    copyBtn.addEventListener('click', async ()=>{
+      const txt = generateQuote();
+      await navigator.clipboard.writeText(txt);
+      copyBtn.textContent='Copied';
+      setTimeout(()=>copyBtn.textContent='Copy',1000);
+    });
+    printBtn.addEventListener('click', ()=>{
+      const w = window.open('', '_blank');
+      w.document.write('<pre>'+generateQuote()+'</pre>');
+      w.print();
+    });
+
+    budgetEl.addEventListener('input', recommendPackage);
+    recommendPackage();
+     document.getElementById("goButton").addEventListener("click", function () {
+    window.location.href = "file:///C:/Users/awdde/OneDrive/Desktop/PERSONAL%20WEBSITE/index.html";  // change to your target website
+});
+  </script>
+</body>
+</html>
